@@ -1,13 +1,27 @@
-import { useState} from 'react';
+import { useState , useEffect } from 'react';
 import InputTodo from '@/components/InputTodo';
 import TodosList from '@/components/TodoList';
 import { v4 } from 'uuid';
 
 const TodosLogic = () => {
+  function getInitialTodos () {
+    const data = localStorage.getItem('todos');
+    const convertedData = JSON.parse(data);
+    return convertedData || [] ;
+  }
+
+  const [todos, setTodos] = useState(getInitialTodos());
+  
+  useEffect(() => {
+    // storing data to local storage
+    const data = JSON.stringify(todos);
+    localStorage.setItem('todos', data);
+  }, [todos]);
+
   const delTodo = (id) => {
     console.log('deleted', id);
   };
-
+  
   const addTodoItem = (title) => {
     const newTodo = {
       id: v4(),
@@ -16,24 +30,6 @@ const TodosLogic = () => {
     };
     setTodos([...todos, newTodo]);
   };
-  
-  const [todos, setTodos] = useState(  [
-    {
-      id: 1,
-      title: 'Setup development environment',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Develop website and add content',
-      completed: false,
-    },
-    {
-      id: 3,
-      title: 'Deploy to live server',
-      completed: false,
-    },
-  ]);
 
   return (
     <div>

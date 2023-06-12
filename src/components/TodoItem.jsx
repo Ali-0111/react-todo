@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from '@/styles/TodoItem.module.css';
 
 const TodoItem = ({ itemProp, setTodos }) => {
   const [editability, setEditability] = useState(false);
 
+  const refDemo = useRef(null);
   const delTodo = (id) => {
     setTodos((todos) => (
       [
@@ -46,6 +47,7 @@ const TodoItem = ({ itemProp, setTodos }) => {
   const handleUpdateDone = (event) => {
     if (event.key === 'Enter') {
       setEditability(false);
+      handleUpdate(refDemo.current.value, itemProp.id)
     }
   };
 
@@ -86,9 +88,10 @@ const TodoItem = ({ itemProp, setTodos }) => {
       </div>
       <input
         type="text"
-        value={itemProp.title}
+        ref={refDemo}
+        defaultValue={itemProp.title}
         className={styles.textInput}
-        onChange={(e) => handleUpdate(e.target.value ,itemProp.id)}
+        // onChange={(e) => handleUpdate(e.target.value ,itemProp.id)}
         onKeyDown={handleUpdateDone}
       />
     </li>

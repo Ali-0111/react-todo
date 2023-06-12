@@ -1,21 +1,22 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const InputTodo = ({addTodoItem}) => {
-  const [title, setTitle] = useState('');
+  const refInput = useRef(null);
   const [message, setMessage] = useState('Add item');
 
-  const handleChange = (e) => {
-    setTitle(e.target.value);
-  };
+  // const handleChange = (e) => {
+  //   setTitle(e.target.value);
+  // };
   
   // ...
   const handleSubmit = (e) => {
     e.preventDefault();
+    const title = refInput.current.value;
     if (title.trim()) {
       addTodoItem(title);
-      setTitle('');
       setMessage('');
+      refInput.current.value='';
     } else {
       setMessage('Please Add Item');
     }
@@ -26,9 +27,10 @@ const InputTodo = ({addTodoItem}) => {
       <input
         type="text"
         className="input-text"
+        ref={refInput}
         placeholder="Add Todo..."
-        value={title}
-        onChange={handleChange}
+        // value={title}
+        // onChange={handleChange}
       />
       <button className="input-submit" onClick={handleSubmit}>Submit</button>
       </form>
