@@ -1,9 +1,0 @@
-// For the code editor to know how to resolve the alias
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-}
