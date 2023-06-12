@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from '@/styles/TodoItem.module.css';
 
 const TodoItem = ({ itemProp, setTodos }) => {
+  const [editability, setEditability] = useState(false);
+
   const delTodo = (id) => {
     setTodos((todos) => (
       [
@@ -25,6 +28,27 @@ const TodoItem = ({ itemProp, setTodos }) => {
     );
   };
 
+  const hanldeEditing = () => {
+    setEditability(!editability);
+  };
+  
+  const handleUpdate = ( updatedTitle ,id ) => {
+    setTodos((prevState) => (
+      prevState.map((item) => {
+        if (item.id == id) {
+         item.title = updatedTitle;
+        }
+        return item;
+      })
+    ));
+  };
+
+  const handleUpdateDone = (event) => {
+    if (event.key === 'Enter') {
+      setEditability(false);
+    }
+  };
+
   const completedStyle = {
     fontStyle: 'italic',
     color: '#595959',
@@ -32,13 +56,25 @@ const TodoItem = ({ itemProp, setTodos }) => {
     textDecoration: 'line-through',
   };
 
+  const viewMode ={};
+  const editMode ={};
+
+  if (editability) {
+    viewMode.display = 'none';
+  } else {
+    editMode.display = 'none'
+  }
+
   return (
     <li className={styles.item}>
-      <div className={styles.content}>
+      <div className={styles.content} style={viewMode}>
         <input type="checkbox"
           checked={itemProp.completed} 
           onChange={() => handleChange(itemProp.id)}  
         />
+        <button onClick={hanldeEditing} >
+          Edit
+        </button>
 
         <button onClick={() => delTodo(itemProp.id)}>
           Delete
@@ -48,6 +84,13 @@ const TodoItem = ({ itemProp, setTodos }) => {
           {itemProp.title}
         </span>
       </div>
+      <input
+        type="text"
+        value={itemProp.title}
+        className={styles.textInput}
+        onChange={(e) => handleUpdate(e.target.value ,itemProp.id)}
+        onKeyDown={handleUpdateDone}
+      />
     </li>
   );
 };
